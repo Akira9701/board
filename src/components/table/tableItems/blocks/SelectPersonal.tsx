@@ -26,23 +26,28 @@ const SelectTrainer = ({
   statusFunc
 }: SelectPersonalInterface) => {
   return (
-    <select
-      className='minimal'
-      value={param}
-      name=''
-      id=''
-      onChange={(e) => {
-        func(id, e.target.value, param, toggleFunc, statusFunc);
-      }}
-    >
-      <option value='-'>-</option>
-      {array.map((el, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <option disabled={el.ability === false} value={el.name} key={index}>
-          {el.name}
-        </option>
-      ))}
-    </select>
+    <div className='table_item-select_wrap'>
+      <div className='table_item-number'>
+        <p>1</p>
+      </div>
+      <select
+        className='minimal'
+        value={param}
+        name=''
+        id=''
+        onChange={(e) => {
+          func(id, e.target.value, param, toggleFunc, statusFunc);
+        }}
+      >
+        <option value='-'>-</option>
+        {array.map((el, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <option disabled={el.ability === false} value={el.name} key={index}>
+            {el.name}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
 

@@ -12,12 +12,20 @@ const scheldueSlice = createSlice({
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
+          console.log(
+            `scheldue/${index}/${action.payload.time}/${i}/status`,
+            action.payload.status
+          );
+
           el[action.payload.time][i].status = action.payload.status;
           // setData(`scheldue/${index}/${action.payload.time}/${i}/status`, action.payload.status);
           if (action.payload.status === 'Пара') {
+            console.log('set para');
             el[action.payload.time][i].trainer.availability = true;
             // setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, true);
           } else {
+            console.log('set sport');
+
             el[action.payload.time][i].trainer.availability = false;
             el[action.payload.time][i].trainer.nameTrainer = '-';
             // setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, false);
@@ -27,35 +35,48 @@ const scheldueSlice = createSlice({
       });
     },
     changeTrainerName(state, action) {
-      [...state].forEach((el) => {
+      [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].trainer.nameTrainer = action.payload.name;
+          // setData(
+          //   `scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`,
+          //   action.payload.name
+          // );
         }
       });
     },
     changeDirectorStatus(state, action) {
-      [...state].forEach((el) => {
+      [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].director.availability =
             !el[action.payload.time][i].director.availability;
+          // setData(
+          //   `scheldue/${index}/${action.payload.time}/${i}/director/availability/`,
+          //   !el[action.payload.time][i].director.availability
+          // );
         }
       });
     },
     changeDirectorName(state, action) {
-      [...state].forEach((el) => {
+      [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].director.nameDirector = action.payload.name;
+          // setData(
+          //   `scheldue/${index}/${action.payload.time}/${i}/director/nameDirector/`,
+          //   action.payload.name
+          // );
         }
       });
     },
     changePersonName(state, action) {
-      [...state].forEach((el) => {
+      [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].name = action.payload.name;
+          // setData(`scheldue/${index}/${action.payload.time}/${i}/name/`, action.payload.name);
         }
       });
     },

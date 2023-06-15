@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { AnyAction } from '@reduxjs/toolkit';
-import { Reorder } from 'framer-motion';
 import {
   addUser,
   changeDirectorStatus,
@@ -10,10 +9,10 @@ import {
   removeUser
 } from '../../../store/slices/scheduleSlice';
 import { IOperator, IPerson, ITrainer } from '../../../types';
-import PersonNull from './persons/PersonNull';
-import Person from './persons/Person';
 import { toggleOperator } from '../../../store/slices/operatorsSlice';
 import { toggleTrainer } from '../../../store/slices/trainersSlice';
+import Person from './persons/Person';
+import PersonNull from './persons/PersonNull';
 
 interface TableAdminItemIntreface {
   data: { [key: string]: IPerson[] };
@@ -43,6 +42,7 @@ const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) 
   personsMax.splice(0, personVal);
 
   const dispatch = useDispatch();
+
   const changeStatusLocal = (id: number, status: string) => {
     dispatch(changeTrainerStatus({ id, status, time }));
   };
@@ -59,6 +59,7 @@ const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) 
     toggleFunc: ({ name, time, flag }: { name: string; time: string; flag: boolean }) => AnyAction,
     statusFunc: ({ id, name, time }: { id: number; name: string; time: string }) => AnyAction
   ) => {
+    console.log(name);
     if (name === '-') {
       dispatch(toggleFunc({ name: prevTrainer, time, flag: true }));
     } else if (prevTrainer === '-') {
@@ -89,21 +90,9 @@ const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) 
       <div className='table_item-time'>
         <p>{time}</p>
       </div>
-      <Reorder.Group
-        axis='y'
-        values={persons}
-        onReorder={() => {
-          console.log(1);
-        }}
-      >
-        {persons.map((item) => (
-          <Reorder.Item key={item.id} value={item.name}>
-            {item.name}
-          </Reorder.Item>
-        ))}
-      </Reorder.Group>
+
       <div className='table_item-data' ref={dataContainer}>
-        {/* {persons.map((el) => (
+        {persons.map((el) => (
           <Person
             key={el.id}
             el={el}
@@ -118,7 +107,7 @@ const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) 
         ))}
         {personsMax.map((el) => {
           return <PersonNull key={el} addPerson={addPerson} />;
-        })} */}
+        })}
       </div>
     </div>
   );
