@@ -11,16 +11,23 @@ const scheldueSlice = createSlice({
     changeTrainerStatus(state, action) {
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-
           if (action.payload.name === 'Пара') {
-            el[action.payload.time][i].trainer.availability = true;
-            setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, true);
+            el[action.payload.time][action.payload.id].trainer.availability = true;
+            setData(
+              `scheldue/${index}/${action.payload.time}/${action.payload.id}/trainer/availability`,
+              true
+            );
           } else {
-            el[action.payload.time][i].trainer.availability = false;
-            el[action.payload.time][i].trainer.nameTrainer = '-';
-            setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, false);
-            setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`, '-');
+            el[action.payload.time][action.payload.id].trainer.availability = false;
+            el[action.payload.time][action.payload.id].trainer.nameTrainer = '-';
+            setData(
+              `scheldue/${index}/${action.payload.time}/${action.payload.id}/trainer/availability`,
+              false
+            );
+            setData(
+              `scheldue/${index}/${action.payload.time}/${action.payload.id}/trainer/nameTrainer/`,
+              '-'
+            );
           }
         }
       });
@@ -28,10 +35,9 @@ const scheldueSlice = createSlice({
     changeTrainerName(state, action) {
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          el[action.payload.time][i].trainer.nameTrainer = action.payload.name;
+          el[action.payload.time][action.payload.id].trainer.nameTrainer = action.payload.name;
           setData(
-            `scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`,
+            `scheldue/${index}/${action.payload.time}/${action.payload.id}/trainer/nameTrainer/`,
             action.payload.name
           );
         }
@@ -40,27 +46,27 @@ const scheldueSlice = createSlice({
     changeDirectorStatus(state, action) {
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          console.log('here -', !el[action.payload.time][i].director.availability);
-          if (el[action.payload.time][i].director.availability) {
-            setData(`scheldue/${index}/${action.payload.time}/${i}/director/nameDirector/`, '-');
+          if (el[action.payload.time][action.payload.id].director.availability) {
+            setData(
+              `scheldue/${index}/${action.payload.time}/${action.payload.id}/director/nameDirector/`,
+              '-'
+            );
           }
           setData(
-            `scheldue/${index}/${action.payload.time}/${i}/director/availability/`,
-            !el[action.payload.time][i].director.availability
+            `scheldue/${index}/${action.payload.time}/${action.payload.id}/director/availability/`,
+            !el[action.payload.time][action.payload.id].director.availability
           );
-          el[action.payload.time][i].director.availability =
-            !el[action.payload.time][i].director.availability;
+          el[action.payload.time][action.payload.id].director.availability =
+            !el[action.payload.time][action.payload.id].director.availability;
         }
       });
     },
     changeDirectorName(state, action) {
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          el[action.payload.time][i].director.nameDirector = action.payload.name;
+          el[action.payload.time][action.payload.id].director.nameDirector = action.payload.name;
           setData(
-            `scheldue/${index}/${action.payload.time}/${i}/director/nameDirector/`,
+            `scheldue/${index}/${action.payload.time}/${action.payload.id}/director/nameDirector/`,
             action.payload.name
           );
         }
@@ -69,9 +75,11 @@ const scheldueSlice = createSlice({
     changePersonName(state, action) {
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          el[action.payload.time][i].name = action.payload.name;
-          setData(`scheldue/${index}/${action.payload.time}/${i}/name/`, action.payload.name);
+          el[action.payload.time][action.payload.id].name = action.payload.name;
+          setData(
+            `scheldue/${index}/${action.payload.time}/${action.payload.id}/name/`,
+            action.payload.name
+          );
         }
       });
     },
@@ -100,11 +108,14 @@ const scheldueSlice = createSlice({
       });
     },
     removeUser(state, action) {
-      [...state].forEach((el) => {
+      [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           // const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          console.log(action.payload);
-          delete el[action.payload.time][action.payload.id];
+          if (action.payload.len !== 1) {
+            console.log(action.payload);
+            delete el[action.payload.time][action.payload.id];
+            setData(`scheldue/${index}/${action.payload.time}/${action.payload.id}`, null);
+          }
         }
       });
     },

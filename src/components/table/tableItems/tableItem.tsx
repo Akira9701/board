@@ -14,8 +14,8 @@ interface TableAdminItemIntreface {
 const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) => {
   const time = Object.keys(data)[0];
   const persons = Object.entries(data[Object.keys(data)[0]]).map((el) => el[1]);
-  const trainersLocal = trainers[Object.keys(trainers)[0]];
-  const directorsLocal = directors[Object.keys(directors)[0]];
+  const trainersLocal = Object.entries(trainers[Object.keys(trainers)[0]]).map((el) => el[1]);
+  const directorsLocal = Object.entries(directors[Object.keys(directors)[0]]).map((el) => el[1]);
   const personsMax = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const dataContainer = useRef<HTMLDivElement | null>(null);
   let personVal = 0;
@@ -29,9 +29,7 @@ const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) 
       personVal += 1;
     }
   });
-
-  personsMax.splice(0, personVal);
-
+  console.log(trainersLocal, directorsLocal);
   return (
     <div className='table_item-wrap'>
       <div className='table_item-time'>
@@ -46,6 +44,7 @@ const TableAdminItem = ({ data, trainers, directors }: TableAdminItemIntreface) 
             time={time}
             directorsLocal={directorsLocal}
             trainersLocal={trainersLocal}
+            len={persons.length}
           />
         ))}
         {personsMax.map((el) => {

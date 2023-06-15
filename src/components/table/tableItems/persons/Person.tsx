@@ -23,9 +23,10 @@ interface TablePersonIntreface {
   time: string;
   trainersLocal: ITrainer[];
   directorsLocal: IOperator[];
+  len: number;
 }
 
-const Person = ({ time, trainersLocal, directorsLocal, el }: TablePersonIntreface) => {
+const Person = ({ time, trainersLocal, directorsLocal, el, len }: TablePersonIntreface) => {
   const dispatch = useDispatch();
 
   const changeStatusLocal = (id: number, status: string) => {
@@ -64,12 +65,12 @@ const Person = ({ time, trainersLocal, directorsLocal, el }: TablePersonIntrefac
   const removePerson = (id: number, trainer: string, operator: string) => {
     dispatch(toggleOperator({ name: operator, time, flag: true }));
     dispatch(toggleTrainer({ name: trainer, time, flag: true }));
-    dispatch(removeUser({ id, time }));
+    dispatch(removeUser({ id, time, len }));
   };
-
+  console.log(trainersLocal);
   return (
-    <>
-      <div key={Date.now()} className='table_item-person' draggable='true'>
+    <div className='table_item-person_container' key={Date.now()} draggable='true'>
+      <div className='table_item-person'>
         <div className='table_item-number'>
           <p>1</p>
         </div>
@@ -131,7 +132,7 @@ const Person = ({ time, trainersLocal, directorsLocal, el }: TablePersonIntrefac
           array={directorsLocal}
         />
       )}
-    </>
+    </div>
   );
 };
 

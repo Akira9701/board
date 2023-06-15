@@ -20,6 +20,7 @@ const TableAdmin = () => {
     getData('operators/').then((res: IScheldueState[]) => dispatch(setOperators(res)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log(scheldue[0]);
   return (
     <section className='table_section'>
       <div className='table_name-container'>

@@ -11,10 +11,13 @@ const trainersSlice = createSlice({
     toggleTrainer(state, action) {
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.name === action.payload.name);
-          if (i !== -1) {
-            el[action.payload.time][i].ability = !!action.payload.flag;
-            setData(`trainers/${index}/${action.payload.time}/${i}/ability`, !!action.payload.flag);
+          const i = el[action.payload.time][action.payload.name];
+          if (i !== undefined) {
+            el[action.payload.time][action.payload.name].ability = !!action.payload.flag;
+            setData(
+              `trainers/${index}/${action.payload.time}/${action.payload.name}/ability`,
+              !!action.payload.flag
+            );
           }
         }
         return el;
