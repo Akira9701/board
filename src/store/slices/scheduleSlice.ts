@@ -12,24 +12,15 @@ const scheldueSlice = createSlice({
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          console.log(
-            `scheldue/${index}/${action.payload.time}/${i}/status`,
-            action.payload.status
-          );
 
-          el[action.payload.time][i].status = action.payload.status;
-          // setData(`scheldue/${index}/${action.payload.time}/${i}/status`, action.payload.status);
-          if (action.payload.status === 'Пара') {
-            console.log('set para');
+          if (action.payload.name === 'Пара') {
             el[action.payload.time][i].trainer.availability = true;
-            // setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, true);
+            setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, true);
           } else {
-            console.log('set sport');
-
             el[action.payload.time][i].trainer.availability = false;
             el[action.payload.time][i].trainer.nameTrainer = '-';
-            // setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, false);
-            // setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`, '-');
+            setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/availability`, false);
+            setData(`scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`, '-');
           }
         }
       });
@@ -39,10 +30,10 @@ const scheldueSlice = createSlice({
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].trainer.nameTrainer = action.payload.name;
-          // setData(
-          //   `scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`,
-          //   action.payload.name
-          // );
+          setData(
+            `scheldue/${index}/${action.payload.time}/${i}/trainer/nameTrainer/`,
+            action.payload.name
+          );
         }
       });
     },
@@ -50,12 +41,16 @@ const scheldueSlice = createSlice({
       [...state].forEach((el, index) => {
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
+          console.log('here -', !el[action.payload.time][i].director.availability);
+          if (el[action.payload.time][i].director.availability) {
+            setData(`scheldue/${index}/${action.payload.time}/${i}/director/nameDirector/`, '-');
+          }
+          setData(
+            `scheldue/${index}/${action.payload.time}/${i}/director/availability/`,
+            !el[action.payload.time][i].director.availability
+          );
           el[action.payload.time][i].director.availability =
             !el[action.payload.time][i].director.availability;
-          // setData(
-          //   `scheldue/${index}/${action.payload.time}/${i}/director/availability/`,
-          //   !el[action.payload.time][i].director.availability
-          // );
         }
       });
     },
@@ -64,10 +59,10 @@ const scheldueSlice = createSlice({
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].director.nameDirector = action.payload.name;
-          // setData(
-          //   `scheldue/${index}/${action.payload.time}/${i}/director/nameDirector/`,
-          //   action.payload.name
-          // );
+          setData(
+            `scheldue/${index}/${action.payload.time}/${i}/director/nameDirector/`,
+            action.payload.name
+          );
         }
       });
     },
@@ -76,18 +71,20 @@ const scheldueSlice = createSlice({
         if (action.payload.time in el) {
           const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
           el[action.payload.time][i].name = action.payload.name;
-          // setData(`scheldue/${index}/${action.payload.time}/${i}/name/`, action.payload.name);
+          setData(`scheldue/${index}/${action.payload.time}/${i}/name/`, action.payload.name);
         }
       });
     },
     addUser(state, action) {
-      [...state].forEach((el) => {
+      [...state].forEach((el, index) => {
         if (action.payload.time in el) {
-          el[action.payload.time].push({
+          const id = Date.now();
+
+          const item = {
             name: action.payload.name,
             time: '10:30',
+            id,
             status: 'Спортсмен',
-            id: Date.now(),
             trainer: {
               availability: false,
               nameTrainer: '-'
@@ -96,15 +93,18 @@ const scheldueSlice = createSlice({
               availability: false,
               nameDirector: '-'
             }
-          });
+          };
+          el[action.payload.time][id] = item;
+          setData(`scheldue/${index}/${action.payload.time}/${Date.now()}`, item);
         }
       });
     },
     removeUser(state, action) {
       [...state].forEach((el) => {
         if (action.payload.time in el) {
-          const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
-          el[action.payload.time].splice(i, 1);
+          // const i = el[action.payload.time].findIndex((item) => item.id === action.payload.id);
+          console.log(action.payload);
+          delete el[action.payload.time][action.payload.id];
         }
       });
     },

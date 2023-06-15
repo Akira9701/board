@@ -1,12 +1,16 @@
 import React from 'react';
 import { AnyAction } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 import Select from '../blocks/Select';
 import SelectPersonal from '../blocks/SelectPersonal';
 import { IOperator, IPerson, ITrainer } from '../../../../types';
 import {
   changeDirectorName,
   changeDirectorStatus,
-  changeTrainerName
+  changeTrainerName,
+  changeTrainerStatus,
+  changePersonName,
+  removeUser
 } from '../../../../store/slices/scheduleSlice';
 import { toggleTrainer } from '../../../../store/slices/trainersSlice';
 import { toggleOperator } from '../../../../store/slices/operatorsSlice';
@@ -16,31 +20,53 @@ import close from '../../../../assets/images/x-circle.svg';
 
 interface TablePersonIntreface {
   el: IPerson;
-  changeStatusLocal: (id: number, status: string) => void;
-  changeDirectorLocal: (id: number) => void;
-  changeNamePerson: (name: string, id: number) => void;
-  changePersonal: (
-    id: number,
-    name: string,
-    prevTrainer: string,
-    toggleFunc: ({ name, time, flag }: { name: string; time: string; flag: boolean }) => AnyAction,
-    statusFunc: ({ id, name, time }: { id: number; name: string; time: string }) => AnyAction
-  ) => void;
-  removePerson: (id: number, trainer: string, operator: string) => void;
+  time: string;
   trainersLocal: ITrainer[];
   directorsLocal: IOperator[];
 }
 
-const Person = ({
-  changeStatusLocal,
-  changeDirectorLocal,
-  changePersonal,
-  changeNamePerson,
-  removePerson,
-  trainersLocal,
-  directorsLocal,
-  el
-}: TablePersonIntreface) => {
+const Person = ({ time, trainersLocal, directorsLocal, el }: TablePersonIntreface) => {
+  const dispatch = useDispatch();
+
+  const changeStatusLocal = (id: number, status: string) => {
+    dispatch(changeTrainerStatus({ id, status, time }));
+  };
+
+  const changeDirectorLocal = (id: number) => {
+    dispatch(changeDirectorStatus({ id, time }));
+  };
+
+  const changePersonal = (
+    id: number,
+    name: string,
+
+    prevTrainer: string,
+    toggleFunc: ({ name, time, flag }: { name: string; time: string; flag: boolean }) => AnyAction,
+    statusFunc: ({ id, name, time }: { id: number; name: string; time: string }) => AnyAction
+  ) => {
+    console.log(name);
+    if (name === '-') {
+      dispatch(toggleFunc({ name: prevTrainer, time, flag: true }));
+    } else if (prevTrainer === '-') {
+      dispatch(toggleFunc({ name, time, flag: false }));
+    } else {
+      dispatch(toggleFunc({ name: prevTrainer, time, flag: true }));
+
+      dispatch(toggleFunc({ name, time, flag: false }));
+    }
+    dispatch(statusFunc({ id, name, time }));
+  };
+
+  const changeNamePerson = (name: string, id: number) => {
+    dispatch(changePersonName({ name, id, time }));
+  };
+
+  const removePerson = (id: number, trainer: string, operator: string) => {
+    dispatch(toggleOperator({ name: operator, time, flag: true }));
+    dispatch(toggleTrainer({ name: trainer, time, flag: true }));
+    dispatch(removeUser({ id, time }));
+  };
+
   return (
     <>
       <div key={Date.now()} className='table_item-person' draggable='true'>
@@ -53,7 +79,7 @@ const Person = ({
         <Select
           func={changeStatusLocal}
           id={el.id}
-          param={el.status}
+          param={el.trainer.availability}
           funcDisable={changePersonal}
           trainerName={el.trainer.nameTrainer}
         />
@@ -85,7 +111,7 @@ const Person = ({
           />
         </div>
       </div>
-      {el.status === 'Пара' && (
+      {el.trainer.availability && (
         <SelectPersonal
           func={changePersonal}
           toggleFunc={toggleTrainer}

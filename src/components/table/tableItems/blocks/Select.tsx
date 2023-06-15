@@ -14,7 +14,7 @@ interface SelectInterface {
     statusFunc: ({ id, name, time }: { id: number; name: string; time: string }) => AnyAction
   ) => void;
   id: number;
-  param: string;
+  param: boolean;
   trainerName: string;
 }
 
@@ -22,15 +22,16 @@ const Select = ({ func, id, param, trainerName, funcDisable }: SelectInterface) 
   return (
     <select
       className='minimal'
-      value={param}
+      value={param ? 'Пара' : 'Спортсмен'}
       name=''
       id=''
       onChange={(e) => {
         if (e.target.value === 'Спортсмен') {
           console.log(trainerName);
           funcDisable(id, '-', trainerName, toggleTrainer, changeTrainerStatus);
+        } else {
+          funcDisable(id, 'Пара', '-', toggleTrainer, changeTrainerStatus);
         }
-        func(id, e.target.value);
       }}
     >
       <option value='Пара'>Пара</option>

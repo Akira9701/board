@@ -1,12 +1,18 @@
 import React, { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import plus from '../../../../assets/images/plus-circle.svg';
 import Button from '../blocks/button';
+import { addUser } from '../../../../store/slices/scheduleSlice';
 
 interface PersonNullInterface {
-  addPerson: (name: string) => void;
+  time: string;
 }
 
-const PersonNull = ({ addPerson }: PersonNullInterface) => {
+const PersonNull = ({ time }: PersonNullInterface) => {
+  const dispatch = useDispatch();
+  const addPerson = (name: string) => {
+    dispatch(addUser({ name, time }));
+  };
   const state = useRef('');
   return (
     <div key={Date.now()} className='table_item-person table_item-person_null'>
